@@ -1,8 +1,8 @@
 *.class
 *.jar
 *.xml
+/.gradle
 *.iml
-.idea/
-.gradle/
 build/
 .DS_Store
+/.idea
