@@ -1,0 +1,35 @@
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+
+checkstyle {
+    configFile = rootProject.file('gradle/config/checkstyle/checkstyle.xml')
+    //ignoreFailures = true
+}
+
+pmd {
+    ruleSetFiles = rootProject.files('gradle/config/pmd/pmd.xml')
+}
+
+gradle.startParameter.excludedTaskNames += ["checkstyleTest",'pmdTest', 'findbugsTest']
+
+gradle.taskGraph.afterTask { task, TaskState state ->
+    if (task.name.equals(checkstyleMain.name) && file("$task.project.checkstyle.reportsDir/main.xml").exists()) {
+        ant.xslt(in: "$task.project.checkstyle.reportsDir/main.xml",
+                style: rootProject.file("gradle/config/checkstyle/checkstyle.xsl"),
+                out: "$task.project.checkstyle.reportsDir/main.html") {
+                param(name: "output.dir", expression: "$task.project.checkstyle.reportsDir")
+        }
+    } else if (task.name.equals(findbugsMain.name) &&
+            file("$task.project.findbugs.reportsDir/main.xml").exists()) {
+        ant.xslt(in: "$task.project.findbugs.reportsDir/main.xml",
+                style: rootProject.file("gradle/config/findbugs/findbugs.xsl"),
+                out: "$task.project.findbugs.reportsDir/main.html")
+    }
+}
+
+jacoco {
+    toolVersion = '0.7.2.201409121644'
+}
+tasks.check.dependsOn(jacocoTestReport)
