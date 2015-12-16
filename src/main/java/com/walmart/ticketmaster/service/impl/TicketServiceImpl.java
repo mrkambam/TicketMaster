@@ -68,7 +68,7 @@ public class TicketServiceImpl implements TicketService {
 
         int requiredSeats = numSeats;
         for (int i = minLevel.get(); i <= maxLevel.get(); i++) {
-            List<Seat> atLevel = SeatRepository.getInstance().findSeatsToHold(requiredSeats, i, durationToHold);
+            List<Seat> atLevel = seatRepository.findSeatsToHold(requiredSeats, i, durationToHold);
             requiredSeats -= atLevel.size();
             holdSeats.addAll(atLevel);
             if (requiredSeats <=0 ) {
@@ -76,7 +76,7 @@ public class TicketServiceImpl implements TicketService {
             }
         }
         if (requiredSeats <= 0) {
-            SeatHold seatHold = SeatRepository.getInstance().holdSeats(holdSeats, customerEmail, durationToHold);
+            SeatHold seatHold = seatRepository.holdSeats(holdSeats, customerEmail, durationToHold);
         }
         return null;
     }
@@ -88,7 +88,7 @@ public class TicketServiceImpl implements TicketService {
             return null;
         }
 
-        return SeatRepository.getInstance().reserveSeats(seatHoldId, customerEmail) ? "SUCCESS" : "FAILURE";
+        return seatRepository.reserveSeats(seatHoldId, customerEmail) ? "SUCCESS" : "FAILURE";
     }
 
     private void validateVenueLevelId(Integer venueLevelId) {

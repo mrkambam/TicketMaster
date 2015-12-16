@@ -25,10 +25,6 @@ public class SeatRepository {
     private static Map<String, SeatHold> SEAT_HOLDER;
     private static AtomicInteger holdId = new AtomicInteger(9999);
 
-
-    public static SeatRepository getInstance() {
-        return null;
-    }
     @PostConstruct
     public void init() {
         System.out.println("Initializing static ticketData map.");
