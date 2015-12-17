@@ -5,8 +5,6 @@ import java.util.List;
 /**
  * Created by mkambam on 12/14/15.
  */
-//@Setter
-//@Getter
 public class SeatHold {
 
     private final Integer id;

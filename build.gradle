@@ -28,7 +28,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
 
     compile 'org.springframework:spring-context:4.2.3.RELEASE'
-
+    compile 'org.projectlombok:lombok:1.16.4'
     // Testing (Unit and Integration) dependencies
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     testCompile 'com.h2database:h2:1.4.190'

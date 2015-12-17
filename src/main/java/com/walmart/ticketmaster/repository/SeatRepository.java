@@ -5,6 +5,8 @@ import com.walmart.ticketmaster.constant.VenueLevelEnum;
 import com.walmart.ticketmaster.domain.Seat;
 import com.walmart.ticketmaster.domain.SeatHold;
 import lombok.Synchronized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Repository
 public class SeatRepository {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeatRepository.class);
 
     private static final Map<Integer, List<Seat>> SEATS = new HashMap<>();
     private static final Map<String, SeatHold> SEAT_HOLDER = new HashMap<>();
@@ -27,7 +30,7 @@ public class SeatRepository {
 
     @PostConstruct
     public void init() {
-        System.out.println("Initializing static ticketData map.");
+        LOGGER.debug("Initializing static seats data map.");
         SEATS.put(VenueLevelEnum.ORCHESTRA.getLevelId(), getSeats(VenueLevelEnum.ORCHESTRA));
         SEATS.put(VenueLevelEnum.MAIN.getLevelId(), getSeats(VenueLevelEnum.MAIN));
         SEATS.put(VenueLevelEnum.BALCONY2.getLevelId(), getSeats(VenueLevelEnum.BALCONY2));
@@ -65,14 +68,6 @@ public class SeatRepository {
 
     @Synchronized
     public List<Seat> findSeatsToHold(int numSeats, int venueLevelId, long durationToHold) {
-        /*return SEATS.get(venueLevelId).stream().filter(seat -> {
-            int numOfSeats = 0;
-            boolean available = seat.isAvailable() && numOfSeats++ <= numSeats;
-            if (available) {
-                seat.setTimer(durationToHold);
-            }
-            return available;
-        }).collect(Collectors.toList());*/
 
         List<Seat> seatsTohold = new ArrayList<>(numSeats);
         for (Seat seat: SEATS.get(venueLevelId)) {
@@ -94,7 +89,7 @@ public class SeatRepository {
         SeatHold seatHold = new SeatHold(HOLD_ID.incrementAndGet(), customerEmail, durationToHold);
         seatHold.setSeats(holdSeats);
         SEAT_HOLDER.put(seatHold.getId() + customerEmail, seatHold);
-        System.out.println("SeatHoldId for the customer: " + customerEmail + " is: " + seatHold.getId());
+        LOGGER.info("SeatHoldId for the customer: " + customerEmail + " is: " + seatHold.getId());
         return seatHold;
     }
 
@@ -102,7 +97,8 @@ public class SeatRepository {
         if (SEAT_HOLDER.containsKey(seatHoldId + customerEmail)) {
             SeatHold seatHold = SEAT_HOLDER.get(seatHoldId + customerEmail);
             if (seatHold.getTimer() < System.currentTimeMillis()) {
-                System.out.println("Hold duration has expired, cannot reserve SEATS for you!!!");
+                LOGGER.info("Hold duration has expired for customer," + customerEmail + ", " +
+                        "cannot reserve SEATS for you!!!");
                 SEAT_HOLDER.remove(seatHoldId + customerEmail);
                 return false;
             }
@@ -117,7 +113,7 @@ public class SeatRepository {
             });
             return true;
         }
-        System.err.println("Unknown or Invalid combination of seatHoldId & customerMailId!!!");
+        LOGGER.error("Unknown or Invalid combination of seatHoldId & customerMailId!!!");
         return false;
     }
 
