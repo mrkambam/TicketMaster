@@ -27,7 +27,7 @@ for a period of time, and finally reserve them if customer wishes so.
 ### Running the Application
 
 1) Make sure JDK 1.8 and Gradle are installed and configured on your path.
-2) Checkout using Git or download the zip from TicketMaster repository to your choice of directory.
+2) Clone using Git or download the zip from TicketMaster repository to your choice of directory.
 3) Go to the TicketMaster directory in the command-line and run the following build commands.
       
       ./gradlew build  
