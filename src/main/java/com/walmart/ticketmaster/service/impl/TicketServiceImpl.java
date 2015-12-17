@@ -24,8 +24,8 @@ import java.util.Optional;
 @Qualifier("ticketService")
 public class TicketServiceImpl implements TicketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TicketServiceImpl.class);
-
-    private static int HOLD_DURATION = 60 * 1000;
+    //CHECKSTYLE IGNORE MagicNumber FOR NEXT LINE
+    private static int holdDuration = 60 * 1000;
 
     @Autowired
     private SeatRepository seatRepository;
@@ -33,7 +33,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public int numSeatsAvailable(Optional<Integer> venueLevel) {
         if (venueLevel.isPresent()) {
-           int venueLevelId = venueLevel.get();
+            int venueLevelId = venueLevel.get();
             validateVenueLevelId(venueLevelId);
             return seatRepository.getAvailableSeatsByVenueLevelId(venueLevelId);
         } else {
@@ -44,17 +44,18 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public SeatHold findAndHoldSeats(int numSeats, Optional<Integer> minLevel,
                                      Optional<Integer> maxLevel, String customerEmail) {
-
+        SeatHold seatHold = null;
+        int min = 1;
+        int max = 4;
         if (minLevel.isPresent()) {
             validateVenueLevelId(minLevel.get());
-        } else {
-            minLevel = Optional.of(new Integer(1));
+            min = minLevel.get();
         }
 
         if (maxLevel.isPresent()) {
             validateVenueLevelId(maxLevel.get());
-        } else {
-            maxLevel = Optional.of(new Integer(4));
+            max = minLevel.get();
+
         }
 
         if (numSeats <= 0) {
@@ -63,22 +64,22 @@ public class TicketServiceImpl implements TicketService {
         if (customerEmail.isEmpty()) {
             throw new MissingCustomerEmailException("Customer Email against whom Seats need to be held is required");
         }
-        long durationToHold = System.currentTimeMillis() + HOLD_DURATION;
+        long durationToHold = System.currentTimeMillis() + holdDuration;
         List<Seat> holdSeats = new ArrayList<>();
 
         int requiredSeats = numSeats;
-        for (int i = minLevel.get(); i <= maxLevel.get(); i++) {
+        for (int i = min; i <= max; i++) {
             List<Seat> atLevel = seatRepository.findSeatsToHold(requiredSeats, i, durationToHold);
             requiredSeats -= atLevel.size();
             holdSeats.addAll(atLevel);
-            if (requiredSeats <=0 ) {
+            if (requiredSeats <= 0) {
                 break;
             }
         }
         if (requiredSeats <= 0) {
-            SeatHold seatHold = seatRepository.holdSeats(holdSeats, customerEmail, durationToHold);
+            seatHold = seatRepository.holdSeats(holdSeats, customerEmail, durationToHold);
         }
-        return null;
+        return seatHold;
     }
 
     @Override
@@ -92,6 +93,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private void validateVenueLevelId(Integer venueLevelId) {
+        //CHECKSTYLE IGNORE MagicNumber FOR NEXT LINE
         if (venueLevelId < 1 || venueLevelId > 4) {
             throw new InvalidVenueLevelException("Valid values for VenueLevelEnum are 1,2,3 or 4");
         }

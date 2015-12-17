@@ -4,7 +4,7 @@ package com.walmart.ticketmaster.constant;
  * Created by mkambam on 12/15/2015.
  */
 
-public enum  SeatStatus {
+public enum SeatStatus {
 
     AVAILABLE("available"), HOLD("hold"), RESERVED("reserved");
 

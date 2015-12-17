@@ -7,17 +7,16 @@ public enum VenueLevelEnum {
 
     ORCHESTRA(1, 25 * 50), MAIN(2, 2 * 100), BALCONY1(3, 15 * 100), BALCONY2(4, 15 * 100);
 
-    private final Integer level;
+    private final Integer levelId;
     private final Integer numOfSeats;
 
-
-    VenueLevelEnum(Integer level,int numOfSeats) {
-        this.level = level;
+    VenueLevelEnum(Integer levelId, int numOfSeats) {
+        this.levelId = levelId;
         this.numOfSeats = numOfSeats;
     }
 
-    public Integer getLevel() {
-        return this.level;
+    public Integer getLevelId() {
+        return this.levelId;
     }
 
     public Integer getTotalSeats() {
@@ -27,6 +26,6 @@ public enum VenueLevelEnum {
 
     @Override
     public String toString() {
-        return String.valueOf(this.level);
+        return String.valueOf(this.levelId);
     }
 }

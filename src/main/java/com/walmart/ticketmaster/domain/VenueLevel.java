@@ -16,7 +16,6 @@ public class VenueLevel {
 
     private String name;
 
-
     private Double price;
 
     private List<Seat> seats;

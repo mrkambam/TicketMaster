@@ -1,14 +1,10 @@
 package com.walmart.ticketmaster.domain;
 
 import com.walmart.ticketmaster.constant.SeatStatus;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by mkambam on 12/14/15.
  */
-@Setter
-@Getter
 public class Seat {
     private Integer id;
 
@@ -24,8 +20,43 @@ public class Seat {
         return status != SeatStatus.RESERVED && timer < System.currentTimeMillis();
     }
 
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public SeatStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(SeatStatus status) {
+        this.status = status;
+    }
 
+    public Integer getVenueLevelId() {
+        return venueLevelId;
+    }
+
+    public void setVenueLevelId(Integer venueLevelId) {
+        this.venueLevelId = venueLevelId;
+    }
+
+    public Integer getSeatHoldId() {
+        return seatHoldId;
+    }
+
+    public void setSeatHoldId(Integer seatHoldId) {
+        this.seatHoldId = seatHoldId;
+    }
+
+    public Long getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Long timer) {
+        this.timer = timer;
+    }
 }

@@ -1,15 +1,12 @@
 package com.walmart.ticketmaster.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
  * Created by mkambam on 12/14/15.
  */
-@Setter
-@Getter
+//@Setter
+//@Getter
 public class SeatHold {
 
     private final Integer id;
@@ -27,4 +24,23 @@ public class SeatHold {
         timer = durationToHold;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public String getMailId() {
+        return mailId;
+    }
+
+    public Long getTimer() {
+        return timer;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
+    }
 }
